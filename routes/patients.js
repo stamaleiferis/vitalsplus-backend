@@ -103,6 +103,47 @@ router.post('/ecg/:id', async (req, res) => {
 
 });
 
+router.get('/ecg/patient/:id', async (req, res) => {
+  const id = req.params.id; //patient ID
+  try {
+      const record = await req.db.collection("Patient").find({_id:new ObjectID(id)}).project({ecg_id:1,_id:0}).toArray()
+      //console.log("Record: "+JSON.stringify(record))
+      res.json({
+          message: 'Successfully retrieved patient\'s ECG record IDs',
+          record: record,
+          success: true
+      });
+  } catch (e) {
+    console.log(e)
+      res.json({
+          message: 'Failed retrieving patient\s ECG record IDs',
+          success: false
+      });
+  }
+  res.send()
+
+});
+
+router.get('/ecg/record/:id', async (req, res) => {
+  const ecg_id = req.params.id; //ECG ID
+  try {
+      const record = await req.db.collection("ECG").find({_id:new ObjectID(ecg_id)}).toArray()
+      res.json({
+          message: 'Successfully retrieved ECG record',
+          record: record,
+          success: true
+      });
+  } catch (e) {
+    console.log(e)
+      res.json({
+          message: 'Failed retrieving ECG record',
+          success: false
+      });
+  }
+  res.send()
+
+});
+
 
 ////////////////////////////////////////////////
 
